@@ -4,7 +4,7 @@ Cory Witt
 script.js
 INFO 1579
 Shaw
-07/06/2025
+07/22/2025
 */
 
 "use strict";
@@ -14,31 +14,24 @@ Shaw
 
 //wait for everything to load before executing this here code
 $(document).ready(() => {
-  // create a new constant to hold a date reference for the current moment
-  const dt = new Date();
-  //Get the current year from the date reference, and put it
-  //in the yield field in the footer.
-  $("#year").text(dt.getFullYear());
+    $("#addItemToList").click(() => {
+       verifyInput();
+       buildList();
+       refocusInput();
+  });
+
+  $("#clearList").click(() => { // clear the list and build it
+    clearList();
+    refocusInput();
+  });
 });
+
+
 //ADD YOUR CODE BELOW
 const listArray = []; // create an empty array to hold the list items
 const listArrayCaps = []; // create an empty array to hold the list items in all caps for comparison
 
-function buildList() { // take the listArray and build the html <li>
-  let listHTML = "";
-  for (let i = 0; i < listArray.length; i++) {
-    listHTML += `<li>${listArray[i]}</li>`;
-  }
-  $("#listItemsHolder").html(listHTML);
-}
-
-function clearList() { //clear the list and build it
-    listArray.length = 0;
-    listArrayCaps.length = 0;
-    buildList();
-}
-
-function verrifyInput() { // check to see if the input is valid
+function verifyInput() { // check to see if the input is valid
     const itemToAdd = $("#listItemInput").val().trim();
     if (listArray.length >= 6) { // check to see if the list is full
       alert(
@@ -56,19 +49,22 @@ function verrifyInput() { // check to see if the input is valid
     }
 }
 
+function buildList() { // take the listArray and build the html <li>
+  let listHTML = "";
+  for (let i = 0; i < listArray.length; i++) {
+    listHTML += `<li>${listArray[i]}</li>`;
+  }
+  $("#listItemsHolder").html(listHTML);
+}
+
+function clearList() { //clear the list and build it
+    listArray.length = 0;
+    listArrayCaps.length = 0;
+    buildList();
+}
+
 function refocusInput() { // refocus the input
     $("#listItemInput").val("").focus(); // clear the input and focus it
 }
 
-$(document).ready(() => {
-  $("#addItemToList").click(() => {
-    verrifyInput();
-    buildList();
-    refocusInput();
-  });
-
-  $("#clearList").click(() => { // clear the list and build it
-    clearList();
-    refocusInput();
-  });
-});
+ 
