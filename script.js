@@ -8,63 +8,65 @@ Shaw
 */
 
 "use strict";
-// This script handles the creation and management of a list of items.
-// It allows users to add items to the list, clear the list, and ensures that the list does not exceed a certain number of items.
-// It also checks for duplicate entries and provides user feedback through alerts.
 
-//wait for everything to load before executing this here code
-$(document).ready(() => {
-    $("#addItemToList").click(() => {
-       verifyInput();
-       buildList();
-       refocusInput();
+// Franz's Liszt's List program will allow the user to manage a list of items.
+// The user can add items to the list, verify that the input is not empty, 
+// not a duplicate, and that the list does not exceed 6 items.
+ 
+$(document).ready(() => {  // when the document is ready, set up the event listeners
+    $("#addItemToList").click(() => {  // when the add button is clicked, verify the user input, build the list, and refocus the input
+       verifyUserInput();   // verify the user input
+       buildList();         // build the list from the temporary array
+       refocusInput();      // refocus the input field
   });
 
   $("#clearList").click(() => { // clear the list and build it
-    clearList();
-    refocusInput();
+    clearList();                // clear the list and input field
+    refocusInput();             // refocus the input field
   });
 });
 
+ 
+const tmpListArray = [];        // create a temporary array to hold the list items
+const listArrayLowerCase = [];  // create an empty array to hold the list items in all caps for comparison
 
-//ADD YOUR CODE BELOW
-const listArray = []; // create an empty array to hold the list items
-const listArrayCaps = []; // create an empty array to hold the list items in all caps for comparison
+function verifyUserInput() { //this function will verify the user input to see if it is empty, duplicate in the existing list, and no more than 6 entries are present in the list.
 
-function verifyInput() { // check to see if the input is valid
-    const itemToAdd = $("#listItemInput").val().trim();
-    if (listArray.length >= 6) { // check to see if the list is full
+    if (tmpListArray.length >= 6) { // check to see if the list is full, no more than 6 items can be added
       alert(
-        "Error! Franz liszt's list is full. Franz liszt's list can only hold 6 items."
+        "The list is full. Franz liszt's list can only hold 6 items."
       );
-    } else if (itemToAdd === "") { // check to see if the input is empty
-      alert(
-        "Error! Franz liszt's list item cannot be empty. This is unacceptable. Franz liszt demands you correct his list!."
+    } else if ($("#listItemInput").val().trim() === "") {   // check to see if the user's input is empty
+      alert(    
+        "List item cannot be empty. Please correct your input."
       );
-    } else if (listArrayCaps.includes(itemToAdd.toUpperCase())) { // check to see if the input is a duplicate
-      alert("Error! You are attempting to enter a duplicate value.");
-    } else { // add the item to the list and build it
-        listArray.push(itemToAdd);
-        listArrayCaps.push(itemToAdd.toUpperCase());
+    } else if (listArrayLowerCase.includes($("#listItemInput").val().trim().toLowerCase())) {   //check to see if the input is a duplicate (case insensitive by converting to lower case)
+      alert("List Item " + $("#listItemInput").val().trim() + " is a duplicate. Please enter a different value."); 
+    } else {
+        tmpListArray.push($("#listItemInput").val().trim());                                  // add the input to the temporary array
+        listArrayLowerCase.push($("#listItemInput").val().trim().toLowerCase());              // add the input to the listArrayLowerCase array in lower case for comparison
     }
 }
 
-function buildList() { // take the listArray and build the html <li>
+function buildList() { // this function will build the list from the temporary array (tmpListArray) and display it to the user ("#listItemsHolder")
   let listHTML = "";
-  for (let i = 0; i < listArray.length; i++) {
-    listHTML += `<li>${listArray[i]}</li>`;
+  for (let i = 0; i < tmpListArray.length; i++) {   // loop through the temporary array and build the list in HTML
+    listHTML += `<li>${tmpListArray[i]}</li>`;
   }
   $("#listItemsHolder").html(listHTML);
 }
 
-function clearList() { //clear the list and build it
-    listArray.length = 0;
-    listArrayCaps.length = 0;
-    buildList();
+function clearList() {   //clear the array lists and build the list in HTML.
+    tmpListArray.length = 0;           // clear the temporary array(tmpListArray)
+    $("#listItemsHolder").html("");    // clear the HTML list display
+    $("#listItemInput").val("");       // clear the input field
+    listArrayLowerCase.length = 0;     // clear the case insensitive array
+    buildList();                       // rebuild the list to show it is empty
 }
 
-function refocusInput() { // refocus the input
-    $("#listItemInput").val("").focus(); // clear the input and focus it
+function refocusInput() {                   // refocus the input
+    $("#listItemInput").val("").focus();    // clear the input and focus it
+
 }
 
  
